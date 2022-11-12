@@ -1,24 +1,56 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { getCategories } from './fetcher';
+import ProductDetail from './components/productDetail';
+import Basket from './components/basket';
+import CheckOut from './components/checkout';
+import Category from './components/Category';
+import { 
+  Route,
+  Routes,
+  BrowserRouter,
+} from "react-router-dom";
+import Layout from './components/Layout';
 
 function App() {
+  const [categories, setCategories] = React.useState({ errorMessage: '', data: []})
+
+  React.useEffect(() =>{
+    const fetchData = async () => {
+      const responseObject = await getCategories();
+      setCategories(responseObject);
+    }
+    fetchData();
+
+
+  },[]
+  )
+
+  // const handleCategoryClick = id => {
+  //   const fetchData = async () => {
+  //     const responseObject = await getProducts(id);
+  //     setProducts(responseObject);
+  //   }
+  //   fetchData();
+
+  // }
+  
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Layout categories={categories} />}>
+      <Route path='/basket' element={<Basket />} />
+      <Route path='/checkout' element={<CheckOut />} />
+      <Route path='/products/:productId' element={<ProductDetail />} />
+      <Route path='/categories/:categoryId' element={<Category />} />
+      </Route>
+    </Routes>
+
+    </BrowserRouter>
+    </>
   );
 }
 
